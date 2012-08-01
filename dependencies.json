@@ -1,0 +1,10 @@
+{
+	"name": "Rosy",
+	"description": "An inheritable / extendable JavaScript framework.",
+	"repository": "git://github.com/ff0000/rosy.git",
+	"branch": "feature/grunt-rewrite",
+	"scope": "project/static/js",
+	"dependencies": {
+        "requirejs": "2.0.x"
+	}
+}
