@@ -1,0 +1,14 @@
+{
+  "name": "Caboose",
+  "description": "RED Interactive's internal SASS + Compass framework",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=0.6.x"
+  },
+  "dependencies": {},
+  "repository": "git://github.com/ff0000/caboose.git",
+  "scope": "resources/compass",
+  "scripts" : {
+    "install" : "node install.js"
+  }
+}
