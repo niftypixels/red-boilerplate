@@ -12,27 +12,38 @@ var exec = function (exec, args, cwd, suppress, doneCB) {
 	var child = cp.spawn(exec, args || [], {
 		cwd: cwd,
 		env: null,
-		setsid: true
+		setsid: true,
+		stdio: (suppress) ? null : "inherit"
 	});
-
-	if (!suppress) {
-		child.stdout.pipe(process.stdout, {
-			end: true
-		});
-
-		process.stdin.pipe(child.stdin, {
-			end: true
-		});
-
-		child.stderr.pipe(process.stderr, {
-			end: true
-		});
-	}
 
 	child.addListener("exit", function (code) {
 		doneCB(!code);
 	});
 };
+
+function detectGemPermission(cb) {
+	var exec = require("child_process").exec,
+		child;
+
+	child = exec("which gem", function (error, stdout, stderr) {
+		if (stdout.toString().trim() === "/usr/bin/gem") {
+			console.log("");
+			console.log("*********************************************************************");
+			console.log("This next bit might require sudo privileges.");
+			console.log("If so, the installer will ask your password for each gem it installs.");
+			console.log("*********************************************************************");
+			console.log("");
+		}
+
+		if (error !== null) {
+			console.error(error);
+		}
+
+		if (cb) {
+			cb();
+		}
+	});
+}
 
 function installGems() {
 	var gemfile = path.join("resources", "tasks", "config", "Gemfile");
@@ -50,18 +61,20 @@ exec("ruby", ["-v"], null, true, function (success) {
 	if (success) {
 		exec("gem", ["-v"], null, true, function (success) {
 			if (success) {
-				exec("bundle", ["-v"], null, true, function (success) {
-					if (success) {
-						installGems();
-					} else {
-						exec("gem", ["install", "bundler"], null, false, function (success) {
-							if (success) {
-								installGems();
-							} else {
-								process.exit();
-							}
-						});
-					}
+				detectGemPermission(function () {
+					exec("bundle", ["-v"], null, true, function (success) {
+						if (success) {
+							installGems();
+						} else {
+							exec("gem", ["install", "bundler"], null, false, function (success) {
+								if (success) {
+									installGems();
+								} else {
+									process.exit();
+								}
+							});
+						}
+					});
 				});
 			} else {
 				console.error("You need to install Ruby Gems before installing the Compass Module.");
