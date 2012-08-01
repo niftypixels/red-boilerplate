@@ -5,20 +5,14 @@
 var fs = require("fs");
 var cp = require("child_process");
 
-var exec = function (ex, args, cwd, suppress, doneCB) {
+var exec = function (exec, args, cwd, suppress, doneCB) {
+	process.stdin.resume();
 
-	var child = cp.spawn(ex, args || [], {cwd: cwd});
-
-	child.stdout.addListener("data", function (chunk) {
-		if (!suppress && chunk) {
-			console.log(chunk.toString());
-		}
-	});
-
-	child.stderr.addListener("data", function (chunk) {
-		if (!suppress && chunk) {
-			console.error(chunk.toString());
-		}
+	var child = cp.spawn(exec, args || [], {
+		cwd: cwd,
+		env: null,
+		setsid: true,
+		stdio: (suppress) ? null : "inherit"
 	});
 
 	child.addListener("exit", function (code) {
