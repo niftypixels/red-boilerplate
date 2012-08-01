@@ -1,0 +1,6 @@
+{
+	"name": "RED Start",
+	"description": "Easy creation of Django projects and applications based the layout used at RED Interactive Agency.",
+	"repository": "git://github.com/ff0000/red-start.git",
+	"branch": "feature/rbp2-port"
+}
