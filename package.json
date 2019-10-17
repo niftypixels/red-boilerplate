@@ -14,7 +14,7 @@
     "grunt-compass": "0.2.x",
     "grunt-requirejs": "0.2.x",
     "requirejs": "2.0.x",
-    "uglify-js": "1.3.x",
+    "uglify-js": "3.6.x",
     "wrench": "1.3.x"
   },
   "config": {
